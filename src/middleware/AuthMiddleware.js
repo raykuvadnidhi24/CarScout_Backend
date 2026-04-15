@@ -1,21 +1,21 @@
+
 // const jwt = require("jsonwebtoken");
 // const secret = process.env.JWT_SECRET || "secret";
 
+// // Middleware to protect routes and optionally check role
 // exports.authMiddleware = (requiredRole) => {
 //   return (req, res, next) => {
 //     try {
 //       const authHeader = req.headers.authorization;
-//       if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//         return res.status(401).json({ message: "Authorization token missing or invalid" });
-//       }
+//       if (!authHeader || !authHeader.startsWith("Bearer "))
+//         return res.status(401).json({ message: "Authorization token missing" });
 
-//       const token = authHeader.split(" ")[1].trim();
+//       const token = authHeader.split(" ")[1];
 //       const decoded = jwt.verify(token, secret);
 //       req.user = decoded;
 
-//       if (requiredRole && decoded.role !== requiredRole) {
-//         return res.status(403).json({ message: "Access denied: insufficient permissions" });
-//       }
+//       if (requiredRole && decoded.role !== requiredRole)
+//         return res.status(403).json({ message: "Access denied" });
 
 //       next();
 //     } catch (err) {
@@ -24,43 +24,50 @@
 //   };
 // };
 
+// const verifyToken = (req, res, next) => {
+//   const token = req.headers.authorization?.split(" ")[1];
 
-// src/middleware/authMiddleware.js
+//   if (!token) return res.status(401).json({ message: "No token" });
+
+//   try {
+//     const decoded = jwt.verify(token, "your_secret_key");
+//     req.user = decoded;
+//     next();
+//   } catch {
+//     return res.status(401).json({ message: "Invalid token" });
+//   }
+// };
+
 const jwt = require("jsonwebtoken");
+
 const secret = process.env.JWT_SECRET || "secret";
 
-// Middleware to protect routes and optionally check role
+// ✅ SINGLE CLEAN AUTH MIDDLEWARE
 exports.authMiddleware = (requiredRole) => {
   return (req, res, next) => {
     try {
       const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Bearer "))
-        return res.status(401).json({ message: "Authorization token missing" });
+
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No token provided" });
+      }
 
       const token = authHeader.split(" ")[1];
-      const decoded = jwt.verify(token, secret);
-      req.user = decoded;
 
-      if (requiredRole && decoded.role !== requiredRole)
+      const decoded = jwt.verify(token, secret);
+
+      req.user = {
+        id: decoded.id || decoded._id || decoded.userId,
+        role: decoded.role,
+      };
+
+      if (requiredRole && req.user.role !== requiredRole) {
         return res.status(403).json({ message: "Access denied" });
+      }
 
       next();
     } catch (err) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
   };
-};
-
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) return res.status(401).json({ message: "No token" });
-
-  try {
-    const decoded = jwt.verify(token, "your_secret_key");
-    req.user = decoded;
-    next();
-  } catch {
-    return res.status(401).json({ message: "Invalid token" });
-  }
 };

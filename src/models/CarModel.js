@@ -19,6 +19,10 @@ const carSchema = new mongoose.Schema(
       enum: ["available", "sold", "pending"],
       default: "available",
     },
+    verified: {
+  type: Boolean,
+  default: false
+},
     approved: {
   type: Boolean,
   default: false

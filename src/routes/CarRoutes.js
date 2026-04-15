@@ -28,6 +28,7 @@ router.put("/cars/:id", authMiddleware("seller"), upload.single("image"), carCon
 router.delete("/cars/:id", authMiddleware("seller"), carController.deleteCar);
 
 
+
 router.get("/pending", async (req, res) => {
   try {
     const cars = await Car.find({ approved: false });

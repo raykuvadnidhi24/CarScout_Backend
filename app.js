@@ -35,6 +35,7 @@ const carRoutes = require("./src/routes/CarRoutes");
 const notificationRoutes = require("./src/routes/NotificationRoutes");
 const adminRoutes = require("./src/routes/AdminRoutes");
 const contactRoutes = require("./src/routes/ContactRoutes");
+const inspectionRoutes = require("./src/routes/InspectionRoutes");
 
 
 app.use("/user", userRoutes);
@@ -42,10 +43,9 @@ app.use("/testdrive", testdriveRoutes);
 app.use("/inquiries", manageInquiriesRoutes);
 app.use("/api", carRoutes);
 app.use("/notifications", notificationRoutes);
-app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api", contactRoutes);
-
+app.use("/api/inspection", inspectionRoutes);
 
 
 
