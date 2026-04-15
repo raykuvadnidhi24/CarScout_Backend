@@ -35,7 +35,8 @@ const carRoutes = require("./src/routes/CarRoutes");
 const notificationRoutes = require("./src/routes/NotificationRoutes");
 const adminRoutes = require("./src/routes/AdminRoutes");
 const contactRoutes = require("./src/routes/ContactRoutes");
-const inspectionRoutes = require("./src/routes/InspectionRoutes");
+// const inspectionRoutes = require("./src/routes/InspectionRoutes");
+const inspectionRoutes = require("./src/routes/inspectionRoutes");
 
 
 app.use("/user", userRoutes);
